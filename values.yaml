@@ -1,0 +1,103 @@
+# Default values for application.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# number of replicas to deploy,
+replicaCount: 1
+
+# image that will be used
+image:
+  repository: containous/whoami
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+  
+# any secrets needed to pull the image (none)
+imagePullSecrets: []
+
+# do we want to override the names used by the application, or use
+# the name when we deploy the helm chart (default)
+nameOverride: ""
+fullnameOverride: ""
+
+# account to be used when running application, if not used it will
+# fall back to default. It is good practice to have an account per
+# application deployed.
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+# used to store persistent data
+persistence:
+  # Set this to not create a new claim, but use the existing claim
+  #existingClaim: someclaim
+  # Size fo the new claim
+  size: 10Gi
+  # The name of the storageclass to use, if not set it will use the default one.
+  #storageClass: ""
+
+# some secrets that we need to store
+secrets:
+  # Set this to point to a secret, if an external secret should be used. This
+  # should contain the secret with the name password.
+  # existingSecret: "somesecret"
+  # The password that will be used.
+  password: ncsa
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+# the application will expose a service, what is the port of the service that
+# will be exposed, and how. It is a good bet to leave these as they are.
+service:
+  type: ClusterIP
+  port: 80
+  
+# should an ingress route be created for the application. Some of the variables
+# are dependend on the ingress controller. For example in the case of traefik we
+# don't need to specify the secretName.
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      path: /
+  tls: false
+  secretName: ""
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
